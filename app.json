@@ -2,22 +2,28 @@
   "expo": {
     "name": "AccreditationPDD",
     "slug": "AccreditationPDD",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "accreditationpdd",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "supportsTablet": true,
+      "bundleIdentifier": "com.blckrzgrrt.AccreditationPDD",
+      "buildNumber": "1",
+      "icon": "./assets/images/aicon.png",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Приложению требуется доступ к вашей галерее, чтобы вы могли прикреплять изображения к вопросам.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#232227",
+        "foregroundImage": "./assets/images/android-icon.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.blckrzgrrt.AccreditationPDD"
     },
     "web": {
       "output": "static",
@@ -28,15 +34,21 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#232227",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "imageWidth": 185
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "fbae55f0-92a3-4b4e-b737-5ac5523d2b3f"
+      }
     }
   }
 }

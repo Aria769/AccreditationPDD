@@ -1,18 +1,43 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import { Stack } from 'expo-router';
+import { useFonts } from 'expo-font';
+import { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import SplashScreen from '@/components/SplashScreen'; // Убедись, что путь верный
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+export default function RootLayout() {
+  // ⚠️ ПРОВЕРЬ ПУТЬ К ШРИФТАМ! Обычно из app/_layout.tsx это '../assets/...'
+  const [fontsLoaded] = useFonts({
+    'Actay-Regular': require('../../assets/fonts/Actay-Regular.otf'),
+    'ActayWide-Bold': require('../../assets/fonts/ActayWide-Bold.otf'),
+  });
 
-SplashScreen.preventAutoHideAsync();
+  const [dataLoaded, setDataLoaded] = useState(false);
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        await AsyncStorage.getItem('customTestData');
+        await AsyncStorage.getItem('allMistakes');
+      } catch (e) {
+        console.error("Ошибка загрузки данных:", e);
+      } finally {
+        setDataLoaded(true);
+      }
+    };
+    loadData();
+  }, []);
+
+  const isReady = fontsLoaded && dataLoaded;
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <>
+      <SplashScreen isReady={isReady} />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: '#232227' },
+        }}
+      />
+    </>
   );
 }
