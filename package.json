@@ -48,7 +48,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "test": "echo 'No tests configured'",
-    "deploy": "npx expo export --platform web && npx gh-pages -d dist"
+    "deploy": "npx expo export --platform web && node -e \"require('fs').writeFileSync('dist/.nojekyll', '')\" && npx gh-pages -d dist --dotfiles"
   },
   "private": true
 }

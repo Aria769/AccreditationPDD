@@ -14,8 +14,11 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="AccreditationPDD" />
         <meta name="theme-color" content="#232227" />
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="../../public/icon-192.png" />
+        <link rel="manifest" href="/AccreditationPDD/manifest.json" />
+        
+        {/* ИСПРАВЛЕНО: убран путь ../../public/ */}
+        <link rel="apple-touch-icon" href="/AccreditationPDD/icon-192.png" />
+        
         <ScrollViewStyleReset />
         <style dangerouslySetInnerHTML={{
           __html: `
