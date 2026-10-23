@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "name": "AccreditationPDD",
+    "slug": "AccreditationPDD",
+    "version": "1.0.1",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "accreditationpdd",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.blckrzgrrt.AccreditationPDD",
+      "buildNumber": "1",
+      "icon": "./assets/images/aicon.png",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Приложению требуется доступ к вашей галерее, чтобы вы могли прикреплять изображения к вопросам.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#232227",
+        "foregroundImage": "./assets/images/android-icon.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.blckrzgrrt.AccreditationPDD"
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.ico",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#232227",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 185
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "fbae55f0-92a3-4b4e-b737-5ac5523d2b3f"
+      }
+    }
+  }
+}
