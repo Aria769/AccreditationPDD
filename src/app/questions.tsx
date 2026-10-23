@@ -46,66 +46,74 @@ export default function QuestionsScreen() {
                 style={styles.backgroundImage1}
                 resizeMode="cover"
                 />
-            <Image
+      <Image
                 source={require('../media/KiraLookingUp.png')}
                 style={styles.backgroundImage2}
                 resizeMode="contain"
                 />
               
-
-      <View style={styles.header}>
-              <View style={styles.cross}>
-                <PushButton
-                  image={require("../media/crossSign.png")}
-                  imageWidth={32}
-                  onPush={() => router.push(`/`)}
-                  unStyled={true}
-                />
-              </View>
-      
-              <Text style={styles.subjectNameText}>{subject.name}</Text>
-      
-      </View>
-
-
-      <View style={styles.questionsWrapper}>                       
-        
-          <FlatList
-            style={styles.questionsContainer}
-            showsVerticalScrollIndicator={false}
-            data={subject.questions}
-            keyExtractor={(item) => String(item.id)}
-            renderItem={({ item }) => (
-              <View style={styles.question}>
-                <View style={styles.questionTextWrapper}>
-                  <QuestionCard question={item} 
-                                withButton={false}
-                                savedAnswer={getReviewAnswer(item)} />
+      <View style={styles.contentWrapper}>
+        <View style={styles.header}>
+                <View style={styles.cross}>
+                  <PushButton
+                    image={require("../media/crossSign.png")}
+                    imageWidth={32}
+                    onPush={() => router.push(`/`)}
+                    unStyled={true}
+                  />
                 </View>
-              </View>
-            )}
-          />
-      </View> 
-      
+        
+                <Text style={styles.subjectNameText}>{subject.name}</Text>
+        
+        </View>
+
+
+        <View style={styles.questionsWrapper}>                       
+          
+            <FlatList
+              style={styles.questionsContainer}
+              showsVerticalScrollIndicator={false}
+              data={subject.questions}
+              keyExtractor={(item) => String(item.id)}
+              renderItem={({ item }) => (
+                <View style={styles.question}>
+                  <View style={styles.questionTextWrapper}>
+                    <QuestionCard question={item} 
+                                  withButton={false}
+                                  savedAnswer={getReviewAnswer(item)} />
+                  </View>
+                </View>
+              )}
+            />
+        </View> 
+        
+      </View>
     </View>
     
   );
 }
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flex: 1,
-    backgroundColor: '#232227',
-    paddingTop: 20,
+    alignItems: "center",
+    backgroundColor: "#232227",
     paddingBottom: 150,
+    paddingTop: 60,
+  },
+  contentWrapper: {
+    flex: 1,
+    width: "100%",
+    maxWidth: 600,
+    paddingHorizontal: 20,
   },
 
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 40,
+    //marginTop: 40,
     gap: 20,
-    paddingHorizontal: 20,
+    //paddingHorizontal: 20,
     width: "100%",
   },
   subjectNameText: {
@@ -136,7 +144,7 @@ const styles = StyleSheet.create({
   },
 
   questionTextWrapper:{
-    paddingHorizontal: 20,
+    //paddingHorizontal: 20,
     paddingTop: 20
   },
 
@@ -162,7 +170,7 @@ const styles = StyleSheet.create({
 
   backgroundImage2:{
     position: 'absolute',
-    bottom: -250,
+    bottom: '-35%',
     zIndex: 1,
     alignSelf: 'center',
     height: '70%',

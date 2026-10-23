@@ -230,87 +230,97 @@ export default function SubjectEditor() {
         style={styles.backgroundImage2}
         resizeMode="contain"
       />
-      <View style={styles.header}>
-        <View style={styles.cross}>
-          <PushButton
-            image={require("../media/crossSign.png")}
-            imageWidth={32}
-            onPush={() => router.push(`/`)}
-            unStyled={true}
-          />
+
+      <View style={styles.contentWrapper}>
+        <View style={styles.header}>
+          <View style={styles.cross}>
+            <PushButton
+              image={require("../media/crossSign.png")}
+              imageWidth={32}
+              onPush={() => router.push(`/`)}
+              unStyled={true}
+            />
+          </View>
+
+          <Text style={styles.subjectNameText}>{subject.name}</Text>
+
+          <View style={styles.trashcanWrapper}>
+            <PushButton
+              image={require("../media/trashcanIcon.png")}
+              imageWidth={32}
+              onPush={handleDeleteSubject}
+            />
+          </View>
         </View>
 
-        <Text style={styles.subjectNameText}>{subject.name}</Text>
+        <View style={styles.questionsWrapper}>
+          <FlatList
+            style={styles.questionsContainer}
+            showsVerticalScrollIndicator={false}
+            data={subject.questions}
+            extraData={questionImages}
+            keyExtractor={(item) => String(item.id)}
+            renderItem={({ item }) => {
+              const hasImage = !!questionImages[item.id];
 
-        <View style={styles.trashcanWrapper}>
-          <PushButton
-            image={require("../media/trashcanIcon.png")}
-            imageWidth={32}
-            onPush={handleDeleteSubject}
-          />
+              return (
+                <View style={styles.question}>
+                  <View style={styles.questionContent}>
+                    <QuestionCard
+                      question={{
+                        ...item,
+                        img: questionImages[item.id] // ✅ Убрали || item.img
+                      }}
+                      withButton={false}
+                      savedAnswer={getReviewAnswer(item)}
+                    />
+                  </View>
+                  <View style={styles.imageIconWrapper}>
+                    <PushButton
+                      image={
+                        hasImage
+                          ? require("../media/deleteImageIcon.png")
+                          : require("../media/addImageIcon.png")
+                      }
+                      imageWidth={32}
+                      onPush={
+                        hasImage
+                          ? () => handleDeleteImage(item.id)
+                          : () => handleAddImage(item.id)
+                      }
+                    />
+                  </View>
+                </View>
+              );
+            }}
+                    />
         </View>
-      </View>
-
-      <View style={styles.questionsWrapper}>
-        <FlatList
-          style={styles.questionsContainer}
-          showsVerticalScrollIndicator={false}
-          data={subject.questions}
-          extraData={questionImages}
-          keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) => {
-            const hasImage = !!questionImages[item.id];
-
-            return (
-              <View style={styles.question}>
-                <View style={styles.questionContent}>
-                  <QuestionCard
-                    question={{
-                      ...item,
-                      img: questionImages[item.id] // ✅ Убрали || item.img
-                    }}
-                    withButton={false}
-                    savedAnswer={getReviewAnswer(item)}
-                  />
-                </View>
-                <View style={styles.imageIconWrapper}>
-                  <PushButton
-                    image={
-                      hasImage
-                        ? require("../media/deleteImageIcon.png")
-                        : require("../media/addImageIcon.png")
-                    }
-                    imageWidth={32}
-                    onPush={
-                      hasImage
-                        ? () => handleDeleteImage(item.id)
-                        : () => handleAddImage(item.id)
-                    }
-                  />
-                </View>
-              </View>
-            );
-          }}
-                  />
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+    container: {
     flex: 1,
     alignItems: "center",
     backgroundColor: "#232227",
-    paddingTop: 20,
     paddingBottom: 150,
+    paddingTop: 60,
   },
+  contentWrapper: {
+    flex: 1,
+    width: "100%",
+    maxWidth: 600,
+    paddingHorizontal: 20,
+  },
+
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 40,
+    //marginTop: 40,
     gap: 5,
-    paddingHorizontal: 20,
+    //paddingHorizontal: 20,
     width: "100%",
   },
   subjectNameText: {
@@ -342,7 +352,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "#403E47",
     paddingBottom: 20,
-    paddingHorizontal: 20,
+    //paddingHorizontal: 20,
     flexDirection: "row",
     alignItems: "flex-start",
     width: "100%",

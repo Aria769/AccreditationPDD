@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import SplashScreen from '@/components/SplashScreen'; // Убедись, что путь верный
 
 export default function RootLayout() {
-  // ⚠️ ПРОВЕРЬ ПУТЬ К ШРИФТАМ! Обычно из app/_layout.tsx это '../assets/...'
   const [fontsLoaded] = useFonts({
     'Actay-Regular': require('../../assets/fonts/Actay-Regular.otf'),
     'ActayWide-Bold': require('../../assets/fonts/ActayWide-Bold.otf'),

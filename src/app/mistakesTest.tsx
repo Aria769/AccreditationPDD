@@ -184,58 +184,60 @@ export default function MistakesTestScreen() {
         resizeMode="contain"
       />
 
-      <View style={styles.cross}>
-        <PushButton
-          image={require("../media/crossSign.png")}
-          onPush={() => router.push(`/`)}
-          imageWidth={32}
-        />
-      </View>
+      <View style={styles.contentWrapper}>
+        <View style={styles.cross}>
+          <PushButton
+            image={require("../media/crossSign.png")}
+            onPush={() => router.push(`/`)}
+            imageWidth={32}
+          />
+        </View>
 
-      <View style={styles.currentQuestionArea}>
-        <Text style={styles.currentQuestion}>
-          {questionIndex + 1} / {mistakesList.length}
-        </Text>
-      </View>
+        <View style={styles.currentQuestionArea}>
+          <Text style={styles.currentQuestion}>
+            {questionIndex + 1} / {mistakesList.length}
+          </Text>
+        </View>
 
-      <View style={styles.progressBar}>
-        <View
-          style={[{ width: `${progressBarPercentage}%` }, styles.progressIndex]}
-        />
-      </View>
+        <View style={styles.progressBar}>
+          <View
+            style={[{ width: `${progressBarPercentage}%` }, styles.progressIndex]}
+          />
+        </View>
 
-      <View style={styles.questionsNavArea}>
-        <PushButton
-          image={require("../media/signPrevious.png")}
-          onPush={prevAnswer}
-          imageWidth={32}
-        />
-        <PushButton
-          image={require("../media/signNext.png")}
-          onPush={nextAnswer}
-          imageWidth={32}
-        />
-      </View>
+        <View style={styles.questionsNavArea}>
+          <PushButton
+            image={require("../media/signPrevious.png")}
+            onPush={prevAnswer}
+            imageWidth={32}
+          />
+          <PushButton
+            image={require("../media/signNext.png")}
+            onPush={nextAnswer}
+            imageWidth={32}
+          />
+        </View>
 
-      <View style={styles.answerArea}>
-        <QuestionCard
-          // Важно: берем именно объект question из нашей структуры {question: ..., userAnswer: ...}
-          question={mistakesList[questionIndex].question}
-          onConfirm={handleAnswer}
-          withButton={true}
-          savedAnswer={answers[questionIndex]}
-          viewedQuestionIndex={questionIndex + 1}
-        />
+        <View style={styles.answerArea}>
+          <QuestionCard
+            // Важно: берем именно объект question из нашей структуры {question: ..., userAnswer: ...}
+            question={mistakesList[questionIndex].question}
+            onConfirm={handleAnswer}
+            withButton={true}
+            savedAnswer={answers[questionIndex]}
+            viewedQuestionIndex={questionIndex + 1}
+          />
 
-        {questionIndex === mistakesList.length - 1 ? (
-          <View style={styles.endTest}>
-            <PushButton
-              text={"Завершить проработку"}
-              onPush={finishTest}
-              backgroundColor={"#6B22F2"}
-            />
-          </View>
-        ) : null}
+          {questionIndex === mistakesList.length - 1 ? (
+            <View style={styles.endTest}>
+              <PushButton
+                text={"Завершить проработку"}
+                onPush={finishTest}
+                backgroundColor={"#6B22F2"}
+              />
+            </View>
+          ) : null}
+        </View>
       </View>
     </View>
   );
@@ -244,9 +246,16 @@ export default function MistakesTestScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
     backgroundColor: "#232227",
     paddingBottom: 150,
-    paddingTop: 20,
+    paddingTop: 60,
+  },
+  contentWrapper: {
+    flex: 1,
+    width: "100%",
+    maxWidth: 600,
+    paddingHorizontal: 20,
   },
   emptyState: {
     flex: 1,
@@ -273,25 +282,21 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     paddingBottom: 50,
-    width: "90%",
+    width: "100%",
     alignSelf: "center",
     zIndex: 1,
   },
   currentQuestionArea: {
     alignItems: "flex-end",
-    marginRight: 20,
-    marginTop: 80,
   },
   questionsNavArea: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
     marginBottom: 20,
   },
   progressBar: {
     height: 15,
     backgroundColor: "#1D1C23",
-    marginHorizontal: 20,
     marginTop: 5,
     marginBottom: 20,
     borderRadius: 20,
@@ -317,9 +322,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   cross: {
-    paddingLeft: 15,
-    paddingTop: 40,
-    position: "absolute",
     zIndex: 1,
   },
   currentQuestion: {
@@ -333,12 +335,12 @@ const styles = StyleSheet.create({
     top: -120,
     zIndex: 0,
     alignSelf: "center",
-    width: "100%",
+    //width: "100%",
     pointerEvents: "none",
   },
   backgroundImage2: {
     position: "absolute",
-    bottom: -250,
+    bottom: '-35%',
     zIndex: 0,
     alignSelf: "center",
     height: "70%",

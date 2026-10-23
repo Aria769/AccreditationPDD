@@ -2,7 +2,7 @@ import PushButton from "@/components/PushButton";
 import QuestionCard from "@/components/QuestionCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { Image, Platform, StyleSheet, Text, View } from "react-native";
 import { getAllSubjects } from "../utils/getSubjects";
 
@@ -16,6 +16,7 @@ export default function TestScreen() {
   const [timeLeft, setTimeLeft] = useState(1200);
   const [shuffledQuestions, setShuffledQuestions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const isFinishedRef = useRef(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -43,6 +44,7 @@ export default function TestScreen() {
       setAnswers({});
       setQuestionIndex(0);
       setTimeLeft(subject.questions.length * 60);
+      isFinishedRef.current = false;
     }
   }, [subject]);
 
@@ -102,6 +104,9 @@ export default function TestScreen() {
   }, [shuffledQuestions, answers]);
 
   const finishTest = useCallback(async () => {
+    if (isFinishedRef.current) return;
+    isFinishedRef.current = true;
+
     const mistakesToSave: any[] = [];
     shuffledQuestions.forEach((question, index) => {
       const userAnswer = answers[index];
@@ -223,7 +228,7 @@ export default function TestScreen() {
   }, []);
 
   useEffect(() => {
-    if (timeLeft === 0) {
+    if (timeLeft === 0 && !isFinishedRef.current) {
       finishTest();
     }
   }, [timeLeft, finishTest]);
@@ -268,65 +273,66 @@ export default function TestScreen() {
         style={styles.backgroundImage2}
         resizeMode="contain"
       />
+      <View style={styles.contentWrapper}>
+        <View style={styles.cross}>
+          <PushButton
+            image={require("../media/crossSign.png")}
+            imageWidth={32}
+            onPush={() => router.push(`/`)}
+            unStyled={true}
+          />
+        </View>
 
-      <View style={styles.cross}>
-        <PushButton
-          image={require("../media/crossSign.png")}
-          imageWidth={32}
-          onPush={() => router.push(`/`)}
-          unStyled={true}
-        />
-      </View>
+        <View style={styles.timerArea}>
+          <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
+        </View>
 
-      <View style={styles.timerArea}>
-        <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
-      </View>
+        <View style={styles.currentQuestionArea}>
+          <Text style={styles.currentQuestion}>
+            {questionIndex + 1}/{shuffledQuestions.length}
+          </Text>
+        </View>
 
-      <View style={styles.currentQuestionArea}>
-        <Text style={styles.currentQuestion}>
-          {questionIndex + 1}/{shuffledQuestions.length}
-        </Text>
-      </View>
+        <View style={styles.progressBar}>
+          <View
+            style={[{ width: `${progressBarPercentage}%` }, styles.progressIndex]}
+          />
+        </View>
 
-      <View style={styles.progressBar}>
-        <View
-          style={[{ width: `${progressBarPercentage}%` }, styles.progressIndex]}
-        />
-      </View>
+        <View style={styles.questionsNavArea}>
+          <PushButton
+            image={require("../media/signPrevious.png")}
+            imageWidth={32}
+            onPush={prevAnswer}
+            unStyled={true}
+          />
+          <PushButton
+            image={require("../media/signNext.png")}
+            imageWidth={32}
+            onPush={nextAnswer}
+            unStyled={true}
+          />
+        </View>
 
-      <View style={styles.questionsNavArea}>
-        <PushButton
-          image={require("../media/signPrevious.png")}
-          imageWidth={32}
-          onPush={prevAnswer}
-          unStyled={true}
-        />
-        <PushButton
-          image={require("../media/signNext.png")}
-          imageWidth={32}
-          onPush={nextAnswer}
-          unStyled={true}
-        />
-      </View>
+        <View style={styles.answerArea}>
+          <QuestionCard
+            question={shuffledQuestions[questionIndex]}
+            onConfirm={handleAnswer}
+            withButton={true}
+            savedAnswer={answers[questionIndex]}
+            viewedQuestionIndex={questionIndex + 1}
+          />
 
-      <View style={styles.answerArea}>
-        <QuestionCard
-          question={shuffledQuestions[questionIndex]}
-          onConfirm={handleAnswer}
-          withButton={true}
-          savedAnswer={answers[questionIndex]}
-          viewedQuestionIndex={questionIndex + 1}
-        />
-
-        {questionIndex === shuffledQuestions.length - 1 ? (
-          <View style={styles.endTest}>
-            <PushButton
-              text={"Завершить"}
-              onPush={finishTest}
-              backgroundColor={"#6B22F2"}
-            />
-          </View>
-        ) : null}
+          {questionIndex === shuffledQuestions.length - 1 ? (
+            <View style={styles.endTest}>
+              <PushButton
+                text={"Завершить"}
+                onPush={finishTest}
+                backgroundColor={"#6B22F2"}
+              />
+            </View>
+          ) : null}
+        </View>
       </View>
     </View>
   );
@@ -335,38 +341,40 @@ export default function TestScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignContent: "center",
+    alignItems: "center",
     backgroundColor: "#232227",
     paddingBottom: 150,
-    paddingTop: 20,
+    paddingTop: 60,
+  },
+  contentWrapper: {
+    flex: 1,
+    width: "100%",
+    maxWidth: 600,
+    paddingHorizontal: 20,
   },
   answerArea: {
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-between",
     paddingBottom: 50,
-    width: "90%",
+    width: "100%",
     alignSelf: "center",
     zIndex: 1,
   },
   timerArea: {
     alignItems: "center",
-    paddingTop: 40,
   },
   currentQuestionArea: {
     alignItems: "flex-end",
-    marginRight: 20,
   },
   questionsNavArea: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
     marginBottom: 20,
   },
   progressBar: {
     height: 15,
     backgroundColor: "#1D1C23",
-    marginHorizontal: 20,
     marginTop: 5,
     marginBottom: 20,
     borderRadius: 20,
@@ -392,9 +400,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   cross: {
-    paddingLeft: 15,
-    paddingTop: 34,
-    position: "absolute",
     zIndex: 1,
   },
   timerText: {
@@ -417,7 +422,7 @@ const styles = StyleSheet.create({
   },
   backgroundImage2: {
     position: "absolute",
-    bottom: -250,
+    bottom: '-35%',
     zIndex: 1,
     alignSelf: "center",
     height: "70%",

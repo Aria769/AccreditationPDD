@@ -129,42 +129,50 @@ export default function MistakesScreen() {
         resizeMode="contain"
       />
 
-      <View style={styles.cross}>
-        <PushButton
-          image={require("../media/crossSign.png")}
-          onPush={() => router.push(`/`)}
-          imageWidth={32}
-        />
-      </View>
+      <View style={styles.contentWrapper}>
+        <View style={styles.cross}>
+          <PushButton
+            image={require("../media/crossSign.png")}
+            onPush={() => router.push(`/`)}
+            imageWidth={32}
+          />
+        </View>
 
-      <View style={styles.questionsWrapper}>
-        <FlatList
-          style={styles.questionsContainer}
-          showsVerticalScrollIndicator={false}
-          data={mistakes}
-          keyExtractor={(item, index) => String(index)}
-          renderItem={({ item, index }) => (
-            <MistakeRow viewedIndex={index} mistakeItem={item} getReviewAnswer={getReviewAnswer} />
-          )}
-        />
+        <View style={styles.questionsWrapper}>
+          <FlatList
+            style={styles.questionsContainer}
+            showsVerticalScrollIndicator={false}
+            data={mistakes}
+            keyExtractor={(item, index) => String(index)}
+            renderItem={({ item, index }) => (
+              <MistakeRow viewedIndex={index} mistakeItem={item} getReviewAnswer={getReviewAnswer} />
+            )}
+          />
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+    container: {
     flex: 1,
+    alignItems: "center",
     backgroundColor: "#232227",
-
     paddingBottom: 150,
-    paddingTop: 20
+    paddingTop: 60,
+  },
+  contentWrapper: {
+    flex: 1,
+    width: "100%",
+    maxWidth: 600,
+    paddingHorizontal: 20,
   },
 
   questionsWrapper: {
     flex: 1,
     alignItems: "center",
-    paddingTop: 80,
+    paddingTop: 20,
   },
 
   questionsContainer: {
@@ -187,7 +195,7 @@ const styles = StyleSheet.create({
   },
 
   questionTextWrapper: {
-    paddingHorizontal: 20,
+    //paddingHorizontal: 20,
   },
 
   questionNumber: {
@@ -203,9 +211,9 @@ const styles = StyleSheet.create({
   },
 
   cross: {
-    paddingLeft: 15,
-    paddingTop: 34,
-    position: "absolute",
+    //paddingLeft: 15,
+    //paddingTop: 34,
+    //position: "absolute",
     zIndex: 1,
   },
 
@@ -219,7 +227,7 @@ const styles = StyleSheet.create({
 
   backgroundImage2: {
     position: "absolute",
-    bottom: -250,
+    bottom: '-35%',
     zIndex: 1,
     alignSelf: "center",
     height: "70%",
