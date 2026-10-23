@@ -117,8 +117,9 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     position: "absolute",
-    top: -80,
-    zIndex: 0,
+    top: '-40%',
+    height: '70%',
+    zIndex: 2,
     alignSelf: "center",
     width: "100%",
   },

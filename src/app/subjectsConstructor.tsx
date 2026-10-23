@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import testData from "../data/tests.json";
+import { showAlert } from '../utils/showAlert';
 
 export default function ConstructorScreen() {
   const router = useRouter();
@@ -34,14 +35,14 @@ export default function ConstructorScreen() {
         const fileContent = await response.text();
         
         if (!fileContent || fileContent.trim() === '') {
-            Alert.alert("Ошибка", "Файл пустой.");
+            showAlert("Ошибка", "Файл пустой.");
             return;
         }
 
         const parsedNewData = JSON.parse(fileContent);
 
         if (!validateStructure(parsedNewData)) {
-            Alert.alert("Ошибка", "Неверный формат JSON файла. Проверьте структуру.");
+            showAlert("Ошибка", "Неверный формат JSON файла. Проверьте структуру.");
             return;
         }
 
@@ -53,7 +54,7 @@ export default function ConstructorScreen() {
         const uniqueNewSubjects = newSubjects.filter(s => !existingIds.has(s.id));
 
         if (uniqueNewSubjects.length === 0) {
-            Alert.alert("Информация", "Все предметы из этого файла уже есть в списке.");
+            showAlert("Информация", "Все предметы из этого файла уже есть в списке.");
             return;
         }
 
@@ -62,18 +63,18 @@ export default function ConstructorScreen() {
 
         await AsyncStorage.setItem('customTestData', JSON.stringify(finalData));
 
-        Alert.alert("Успех", `Добавлено предметов: ${uniqueNewSubjects.length}`);
+        showAlert("Успех", `Добавлено предметов: ${uniqueNewSubjects.length}`);
 
     } catch (error: any) {
         console.error("Full error:", error);
         
         if (error.message?.includes('JSON')) {
-            Alert.alert(
+            showAlert(
                 "Ошибка формата",
                 "Файл содержит невалидный JSON. Проверьте синтаксис."
             );
         } else {
-            Alert.alert(
+            showAlert(
                 "Ошибка", 
                 "Не удалось загрузить файл. Убедитесь, что файл корректный."
             );
@@ -82,7 +83,7 @@ export default function ConstructorScreen() {
 };
 
 const handleResetCache = async () => {
-    Alert.alert(
+    showAlert(
         "Сброс кэша",
         "Это удалит все загруженные предметы и ошибки. Продолжить?",
         [

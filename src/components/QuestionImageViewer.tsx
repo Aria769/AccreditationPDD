@@ -78,7 +78,9 @@ const styles = StyleSheet.create({
   },
   questionImage: {
     width: "100%",
-    //height: 200,
+    minHeight: 200,
+    maxHeight: 400,
+    resizeMode: 'contain',
     aspectRatio: 4/3,
     borderRadius: 10,
   },

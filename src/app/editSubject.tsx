@@ -13,6 +13,7 @@ import {
   pickAndCacheImage,
   removeQuestionImage,
 } from "../utils/imageHandler"; // ✅ Импортируй утилиты
+import { showAlert } from '../utils/showAlert';
 
 export default function SubjectEditor() {
   const router = useRouter();
@@ -99,7 +100,7 @@ export default function SubjectEditor() {
               "customTestData",
               JSON.stringify(parsedData),
             );
-            Alert.alert("Успех", "Изображение добавлено к вопросу");
+            showAlert("Успех", "Изображение добавлено к вопросу");
           }
         }
       }
@@ -107,7 +108,7 @@ export default function SubjectEditor() {
   };
 
   const handleDeleteImage = async (questionId: number) => {
-    Alert.alert(
+    showAlert(
       "Удалить изображение",
       "Вы уверены, что хотите удалить изображение из этого вопроса?",
       [
@@ -160,7 +161,7 @@ export default function SubjectEditor() {
   };
 
   const handleDeleteSubject = () => {
-    Alert.alert(
+    showAlert(
       "Удаление предмета",
       "Вы уверены, что хотите удалить этот предмет? Это действие нельзя отменить.",
       [
@@ -176,7 +177,7 @@ export default function SubjectEditor() {
         (subject) => subject.id === subjectId,
       );
       if (isBuiltIn) {
-        Alert.alert("Ошибка", "Встроенные предметы удалять нельзя.");
+        showAlert("Ошибка", "Встроенные предметы удалять нельзя.");
         return;
       }
 
@@ -185,7 +186,7 @@ export default function SubjectEditor() {
 
       const storedData = await AsyncStorage.getItem("customTestData");
       if (!storedData) {
-        Alert.alert("Ошибка", "Данные не найдены или предмет уже удален.");
+        showAlert("Ошибка", "Данные не найдены или предмет уже удален.");
         return;
       }
 
@@ -197,7 +198,7 @@ export default function SubjectEditor() {
       );
 
       if (updatedSubjects.length === initialLength) {
-        Alert.alert("Ошибка", "Этот предмет не является пользовательским.");
+        showAlert("Ошибка", "Этот предмет не является пользовательским.");
         return;
       }
 
@@ -206,7 +207,7 @@ export default function SubjectEditor() {
         JSON.stringify({ subjects: updatedSubjects }),
       );
 
-      Alert.alert("Успех", "Предмет успешно удален.", [
+      showAlert("Успех", "Предмет успешно удален.", [
         {
           text: "OK",
           onPress: () => router.push("/"),
@@ -214,7 +215,7 @@ export default function SubjectEditor() {
       ]);
     } catch (error) {
       console.error("Ошибка при удалении предмета:", error);
-      Alert.alert("Ошибка", "Не удалось удалить предмет. Попробуйте позже.");
+      showAlert("Ошибка", "Не удалось удалить предмет. Попробуйте позже.");
     }
   };
 
@@ -269,7 +270,7 @@ export default function SubjectEditor() {
                     <QuestionCard
                       question={{
                         ...item,
-                        img: questionImages[item.id] // ✅ Убрали || item.img
+                        img: questionImages[item.id]
                       }}
                       withButton={false}
                       savedAnswer={getReviewAnswer(item)}
