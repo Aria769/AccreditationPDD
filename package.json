@@ -47,7 +47,8 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "test": "echo 'No tests configured'"
+    "test": "echo 'No tests configured'",
+    "deploy": "npx expo export --platform web && npx gh-pages -d dist"
   },
   "private": true
 }
