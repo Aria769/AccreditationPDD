@@ -73,7 +73,7 @@ export default function TestScreen() {
           );
           if (JSON.stringify(sortedUser) === JSON.stringify(sortedCorrect))
             correctCount++;
-          break;
+        break;
         case "written-answer-question":
           const correctAnswers = question.correctAnswer as string[];
           if (
@@ -136,12 +136,13 @@ export default function TestScreen() {
           if (userAnswer === question.correctAnswer) isCorrect = true;
           break;
         case "multiple-answer-question":
-          if (
-            JSON.stringify(userAnswer) ===
-            JSON.stringify(question.correctAnswer)
-          )
+          const sortedUser = [...userAnswer].sort((a, b) => a - b);
+          const sortedCorrect = [...question.correctAnswer].sort(
+            (a, b) => a - b,
+          );
+          if (JSON.stringify(sortedUser) === JSON.stringify(sortedCorrect))
             isCorrect = true;
-          break;
+        break;
         case "written-answer-question":
           const correctAnswers = question.correctAnswer as string[];
           if (
