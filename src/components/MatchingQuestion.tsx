@@ -32,7 +32,7 @@ export default function MatchingQuestionCard({
   const [buttonColor, setButtonColor] = useState("#0A99D2");
   const [mapping, setMapping] = useState<Record<number, number>>({});
 
-  // ✅ УДАЛИЛИ useState для shuffledRightIndices. Вместо этого используем useMemo ниже.
+
 
   const isLeftPaired = (index: number) => mapping[index] !== undefined;
   const isRightPaired = (index: number) =>
@@ -47,7 +47,7 @@ export default function MatchingQuestionCard({
     return arr;
   };
 
-  // ✅ ВЫЧИСЛЯЕМ ПОРЯДОК ПРАВОГО СТОЛБЦА
+
   const displayRightIndices = useMemo(() => {
     if (withButton) {
       // В режиме теста: перемешиваем
@@ -201,7 +201,6 @@ export default function MatchingQuestionCard({
           </View>
 
           <View style={styles.rightOptions}>
-            {/* ✅ ИСПОЛЬЗУЕМ displayRightIndices вместо старого стейта */}
             {displayRightIndices.map((originalIndex) => {
               const leftKey = Object.keys(mapping).find(
                 (key) => mapping[Number(key)] === originalIndex

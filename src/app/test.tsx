@@ -2,7 +2,7 @@ import PushButton from "@/components/PushButton";
 import QuestionCard from "@/components/QuestionCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Image, Platform, StyleSheet, Text, View } from "react-native";
 import { getAllSubjects } from "../utils/getSubjects";
 
@@ -67,10 +67,11 @@ export default function TestScreen() {
           if (userAnswer === question.correctAnswer) correctCount++;
           break;
         case "multiple-answer-question":
-          if (
-            JSON.stringify(userAnswer) ===
-            JSON.stringify(question.correctAnswer)
-          )
+          const sortedUser = [...userAnswer].sort((a, b) => a - b);
+          const sortedCorrect = [...question.correctAnswer].sort(
+            (a, b) => a - b,
+          );
+          if (JSON.stringify(sortedUser) === JSON.stringify(sortedCorrect))
             correctCount++;
           break;
         case "written-answer-question":
@@ -85,16 +86,29 @@ export default function TestScreen() {
             correctCount++;
           break;
         case "matching-question":
+          // Преобразуем индексы в значения перед сравнением
+          const userMatchingValues = userAnswer.map(
+            (idx: number) => question.optionsRight[idx],
+          );
+          const correctMatchingValues = question.correctAnswer.map(
+            (idx: number) => question.optionsRight[idx],
+          );
           if (
-            JSON.stringify(userAnswer) ===
-            JSON.stringify(question.correctAnswer)
+            JSON.stringify(userMatchingValues) ===
+            JSON.stringify(correctMatchingValues)
           )
             correctCount++;
           break;
         case "sequence-question":
+          const userSequenceValues = userAnswer.map(
+            (idx: number) => question.lines[idx],
+          );
+          const correctSequenceValues = question.correctAnswer.map(
+            (idx: number) => question.lines[idx],
+          );
           if (
-            JSON.stringify(userAnswer) ===
-            JSON.stringify(question.correctAnswer)
+            JSON.stringify(userSequenceValues) ===
+            JSON.stringify(correctSequenceValues)
           )
             correctCount++;
           break;
@@ -140,16 +154,28 @@ export default function TestScreen() {
             isCorrect = true;
           break;
         case "matching-question":
+          const userMatchingValues = userAnswer.map(
+            (idx: number) => question.optionsRight[idx],
+          );
+          const correctMatchingValues = question.correctAnswer.map(
+            (idx: number) => question.optionsRight[idx],
+          );
           if (
-            JSON.stringify(userAnswer) ===
-            JSON.stringify(question.correctAnswer)
+            JSON.stringify(userMatchingValues) ===
+            JSON.stringify(correctMatchingValues)
           )
             isCorrect = true;
           break;
         case "sequence-question":
+          const userSequenceValues = userAnswer.map(
+            (idx: number) => question.lines[idx],
+          );
+          const correctSequenceValues = question.correctAnswer.map(
+            (idx: number) => question.lines[idx],
+          );
           if (
-            JSON.stringify(userAnswer) ===
-            JSON.stringify(question.correctAnswer)
+            JSON.stringify(userSequenceValues) ===
+            JSON.stringify(correctSequenceValues)
           )
             isCorrect = true;
           break;
@@ -233,7 +259,6 @@ export default function TestScreen() {
     }
   }, [timeLeft, finishTest]);
 
-  
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -295,7 +320,10 @@ export default function TestScreen() {
 
         <View style={styles.progressBar}>
           <View
-            style={[{ width: `${progressBarPercentage}%` }, styles.progressIndex]}
+            style={[
+              { width: `${progressBarPercentage}%` },
+              styles.progressIndex,
+            ]}
           />
         </View>
 
@@ -422,7 +450,7 @@ const styles = StyleSheet.create({
   },
   backgroundImage2: {
     position: "absolute",
-    bottom: '-35%',
+    bottom: "-35%",
     zIndex: 1,
     alignSelf: "center",
     height: "70%",

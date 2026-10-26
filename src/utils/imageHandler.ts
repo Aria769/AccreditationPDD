@@ -1,11 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from "expo-file-system/legacy";
 import * as ImagePicker from "expo-image-picker";
+import localforage from "localforage"; // Библиотека для работы с IndexedDB на вебе
 import { Platform } from "react-native";
-import localforage from "localforage"; // ✅ Библиотека для работы с IndexedDB на вебе
-import { showAlert } from '../utils/showAlert';
+import { showAlert } from "../utils/showAlert";
 
-// ✅ Создаём отдельное хранилище для картинок на вебе (IndexedDB, лимит ~50-100+ МБ)
+// Создаём отдельное хранилище для картинок на вебе (IndexedDB, лимит ~50-100+ МБ)
 const webImageStore = localforage.createInstance({
   name: "AccreditationPDD_Images",
   storeName: "question_images",
@@ -17,7 +17,7 @@ type ImageCache = {
   [key: string]: string;
 };
 
-// --- Вспомогательные функции для МОБИЛЬНЫХ (остаются без изменений) ---
+// --- Вспомогательные функции для МОБИЛЬНЫХ  ---
 const getImageCache = async (): Promise<ImageCache> => {
   try {
     const cached = await AsyncStorage.getItem(IMAGE_CACHE_KEY);
@@ -43,7 +43,8 @@ export const pickAndCacheImage = async (
   subjectId: string,
 ): Promise<string | null> => {
   try {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
       showAlert("Необходим доступ к галерее");
@@ -54,14 +55,14 @@ export const pickAndCacheImage = async (
       mediaTypes: "images",
       allowsEditing: false,
       quality: 0.7,
-      base64: Platform.OS === "web", // ✅ ДЛЯ ВЕБА: запрашиваем base64, так как FileSystem не работает
+      base64: Platform.OS === "web", // ДЛЯ ВЕБА: запрашиваем base64, так как FileSystem не работает
     });
 
     if (!result.canceled && result.assets[0]) {
       const cacheKey = `${subjectId}_${questionId}`;
 
       if (Platform.OS === "web") {
-        // 🌐 ВЕБ: Сохраняем Base64 строку в IndexedDB (безопасно и вместительно)
+        // ВЕБ: Сохраняем Base64 строку в IndexedDB
         if (result.assets[0].base64) {
           const base64String = `data:image/jpeg;base64,${result.assets[0].base64}`;
           await webImageStore.setItem(cacheKey, base64String);
@@ -69,7 +70,7 @@ export const pickAndCacheImage = async (
           return base64String;
         }
       } else {
-        // 📱 МОБИЛЬНЫЕ: Твоя исходная, проверенная логика с FileSystem
+        // МОБИЛЬНЫЕ: логика с FileSystem
         const sourceUri = result.assets[0].uri;
         const fileName = `${subjectId}_${questionId}.jpg`;
         const fileUri = `${FileSystem.documentDirectory}${fileName}`;
@@ -102,10 +103,10 @@ export const getQuestionImage = async (
   const cacheKey = `${subjectId}_${questionId}`;
 
   if (Platform.OS === "web") {
-    // 🌐 ВЕБ: Читаем из IndexedDB
+    // ВЕБ: Читаем из IndexedDB
     return (await webImageStore.getItem(cacheKey)) as string | undefined;
   } else {
-    // 📱 МОБИЛЬНЫЕ: Читаем из AsyncStorage
+    // МОБИЛЬНЫЕ: Читаем из AsyncStorage
     const cache = await getImageCache();
     return cache[cacheKey];
   }
@@ -119,10 +120,10 @@ export const removeQuestionImage = async (
     const cacheKey = `${subjectId}_${questionId}`;
 
     if (Platform.OS === "web") {
-      // 🌐 ВЕБ: Просто удаляем запись из IndexedDB
+      // ВЕБ: Просто удаляем запись из IndexedDB
       await webImageStore.removeItem(cacheKey);
     } else {
-      // 📱 МОБИЛЬНЫЕ: Удаляем файл и запись в AsyncStorage
+      // МОБИЛЬНЫЕ: Удаляем файл и запись в AsyncStorage
       const cache = await getImageCache();
       const uri = cache[cacheKey];
 
@@ -141,7 +142,7 @@ export const removeQuestionImage = async (
 export const clearSubjectImages = async (subjectId: string) => {
   try {
     if (Platform.OS === "web") {
-      // 🌐 ВЕБ: Перебираем ключи в IndexedDB и удаляем нужные
+      // ВЕБ: Перебираем ключи в IndexedDB и удаляем нужные
       const keys = await webImageStore.keys();
       let deletedCount = 0;
       for (const key of keys) {
@@ -150,9 +151,11 @@ export const clearSubjectImages = async (subjectId: string) => {
           deletedCount++;
         }
       }
-      console.log(`✅ Удалено ${deletedCount} картинок предмета ${subjectId} из IndexedDB`);
+      console.log(
+        `✅ Удалено ${deletedCount} картинок предмета ${subjectId} из IndexedDB`,
+      );
     } else {
-      // 📱 МОБИЛЬНЫЕ: Твоя исходная логика
+      // МОБИЛЬНЫЕ: Твоя исходная логика
       const cache = await getImageCache();
       const keysToDelete: string[] = [];
 
@@ -175,7 +178,9 @@ export const clearSubjectImages = async (subjectId: string) => {
       }
 
       await saveImageCache(cache);
-      console.log(`✅ Удалено ${keysToDelete.length} картинок предмета ${subjectId}`);
+      console.log(
+        `✅ Удалено ${keysToDelete.length} картинок предмета ${subjectId}`,
+      );
     }
   } catch (error) {
     console.error("Ошибка при очистке картинок:", error);

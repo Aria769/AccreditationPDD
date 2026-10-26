@@ -1,10 +1,10 @@
 import PushButton from "@/components/PushButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as DocumentPicker from "expo-document-picker";
 import { useRouter } from "expo-router";
-import { Alert, StyleSheet, Text, View } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StyleSheet, Text, View } from "react-native";
 import testData from "../data/tests.json";
-import { showAlert } from '../utils/showAlert';
+import { showAlert } from "../utils/showAlert";
 
 export default function ConstructorScreen() {
   const router = useRouter();
@@ -22,96 +22,102 @@ export default function ConstructorScreen() {
 
   const handleLoadJson = async () => {
     try {
-        const result = await DocumentPicker.getDocumentAsync({
-            type: ['application/json', 'text/plain', '*/*'],
-            copyToCacheDirectory: true,
-        });
+      const result = await DocumentPicker.getDocumentAsync({
+        type: ["application/json", "text/plain", "*/*"],
+        copyToCacheDirectory: true,
+      });
 
-        if (result.canceled) return;
+      if (result.canceled) return;
 
-        const fileUri = result.assets[0].uri;
-        
-        const response = await fetch(fileUri);
-        const fileContent = await response.text();
-        
-        if (!fileContent || fileContent.trim() === '') {
-            showAlert("Ошибка", "Файл пустой.");
-            return;
-        }
+      const fileUri = result.assets[0].uri;
 
-        const parsedNewData = JSON.parse(fileContent);
+      const response = await fetch(fileUri);
+      const fileContent = await response.text();
 
-        if (!validateStructure(parsedNewData)) {
-            showAlert("Ошибка", "Неверный формат JSON файла. Проверьте структуру.");
-            return;
-        }
+      if (!fileContent || fileContent.trim() === "") {
+        showAlert("Ошибка", "Файл пустой.");
+        return;
+      }
 
-        const storedData = await AsyncStorage.getItem('customTestData');
-        let currentSubjects = storedData ? JSON.parse(storedData).subjects : testData.subjects;
+      const parsedNewData = JSON.parse(fileContent);
 
-        const newSubjects = parsedNewData.subjects;
-        const existingIds = new Set(currentSubjects.map(s => s.id));
-        const uniqueNewSubjects = newSubjects.filter(s => !existingIds.has(s.id));
+      if (!validateStructure(parsedNewData)) {
+        showAlert("Ошибка", "Неверный формат JSON файла. Проверьте структуру.");
+        return;
+      }
 
-        if (uniqueNewSubjects.length === 0) {
-            showAlert("Информация", "Все предметы из этого файла уже есть в списке.");
-            return;
-        }
+      const storedData = await AsyncStorage.getItem("customTestData");
+      let currentSubjects = storedData
+        ? JSON.parse(storedData).subjects
+        : testData.subjects;
 
-        const mergedSubjects = [...currentSubjects, ...uniqueNewSubjects];
-        const finalData = { subjects: mergedSubjects };
+      const newSubjects = parsedNewData.subjects;
+      const existingIds = new Set(currentSubjects.map((s) => s.id));
+      const uniqueNewSubjects = newSubjects.filter(
+        (s) => !existingIds.has(s.id),
+      );
 
-        await AsyncStorage.setItem('customTestData', JSON.stringify(finalData));
+      if (uniqueNewSubjects.length === 0) {
+        showAlert(
+          "Информация",
+          "Все предметы из этого файла уже есть в списке.",
+        );
+        return;
+      }
 
-        showAlert("Успех", `Добавлено предметов: ${uniqueNewSubjects.length}`);
+      const mergedSubjects = [...currentSubjects, ...uniqueNewSubjects];
+      const finalData = { subjects: mergedSubjects };
 
+      await AsyncStorage.setItem("customTestData", JSON.stringify(finalData));
+
+      showAlert("Успех", `Добавлено предметов: ${uniqueNewSubjects.length}`);
     } catch (error: any) {
-        console.error("Full error:", error);
-        
-        if (error.message?.includes('JSON')) {
-            showAlert(
-                "Ошибка формата",
-                "Файл содержит невалидный JSON. Проверьте синтаксис."
-            );
-        } else {
-            showAlert(
-                "Ошибка", 
-                "Не удалось загрузить файл. Убедитесь, что файл корректный."
-            );
-        }
-    }
-};
+      console.error("Full error:", error);
 
-const handleResetCache = async () => {
+      if (error.message?.includes("JSON")) {
+        showAlert(
+          "Ошибка формата",
+          "Файл содержит невалидный JSON. Проверьте синтаксис.",
+        );
+      } else {
+        showAlert(
+          "Ошибка",
+          "Не удалось загрузить файл. Убедитесь, что файл корректный.",
+        );
+      }
+    }
+  };
+
+  const handleResetCache = async () => {
     showAlert(
-        "Сброс кэша",
-        "Это удалит все загруженные предметы и ошибки. Продолжить?",
-        [
-            { text: "Отмена", style: "cancel" },
-            {
-                text: "Сбросить",
-                style: "destructive",
-                onPress: async () => {
-                    await AsyncStorage.removeItem('customTestData');
-                    await AsyncStorage.removeItem('allMistakes');
-                    await AsyncStorage.removeItem('mistakes');
-                    Alert.alert("Готово", "Кэш очищен. Перезагрузите приложение.");
-                }
-            }
-        ]
+      "Сброс кэша",
+      "Это удалит все загруженные предметы и ошибки. Продолжить?",
+      [
+        { text: "Отмена", style: "cancel" },
+        {
+          text: "Сбросить",
+          style: "destructive",
+          onPress: async () => {
+            await AsyncStorage.removeItem("customTestData");
+            await AsyncStorage.removeItem("allMistakes");
+            await AsyncStorage.removeItem("mistakes");
+            showAlert("Готово", "Кэш очищен. Перезагрузите приложение.");
+          },
+        },
+      ],
     );
-};
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.cross}>
-              <PushButton
-                image={require("../media/crossSign.png")}
-                imageWidth={32}
-                onPush={() => router.push(`/`)}
-                unStyled={true}
-              />
-            </View>
+        <PushButton
+          image={require("../media/crossSign.png")}
+          imageWidth={32}
+          onPush={() => router.push(`/`)}
+          unStyled={true}
+        />
+      </View>
       <Text style={styles.resultText}>Конструктор тестов</Text>
 
       <View style={styles.infoText}>
@@ -125,10 +131,10 @@ const handleResetCache = async () => {
           onPush={handleLoadJson}
         />
         <PushButton
-        text={"Сбросить кэш"}
-        onPush={handleResetCache}
-        backgroundColor="#6B22F2"
-      />
+          text={"Сбросить кэш"}
+          onPush={handleResetCache}
+          backgroundColor="#6B22F2"
+        />
       </View>
     </View>
   );

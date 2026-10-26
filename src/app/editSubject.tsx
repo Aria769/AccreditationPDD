@@ -12,7 +12,7 @@ import {
   getQuestionImage,
   pickAndCacheImage,
   removeQuestionImage,
-} from "../utils/imageHandler"; // ✅ Импортируй утилиты
+} from "../utils/imageHandler"; 
 import { showAlert } from '../utils/showAlert';
 
 export default function SubjectEditor() {
@@ -66,20 +66,18 @@ export default function SubjectEditor() {
     return item.correctAnswer;
   };
 
-  // ✅ Функция для добавления изображения к вопросу
+  //Функция для добавления изображения к вопросу
   const handleAddImage = async (questionId: number) => {
     if (!subjectId) return;
 
     const imageUrl = await pickAndCacheImage(questionId, subjectId as string);
 
     if (imageUrl) {
-      // Обновить стейт для отображения
       setQuestionImages((prev) => ({
         ...prev,
         [questionId]: imageUrl,
       }));
 
-      // Обновить вопрос в хранилище
       const storedData = await AsyncStorage.getItem("customTestData");
       if (storedData) {
         const parsedData = JSON.parse(storedData);
@@ -181,7 +179,6 @@ export default function SubjectEditor() {
         return;
       }
 
-      // ✅ Сначала удаляем все картинки предмета
       await clearSubjectImages(subjectId as string);
 
       const storedData = await AsyncStorage.getItem("customTestData");

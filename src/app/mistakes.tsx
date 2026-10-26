@@ -21,16 +21,16 @@ export default function MistakesScreen() {
         const jsonString = await AsyncStorage.getItem("mistakes");
         if (jsonString) {
           const parsedData = JSON.parse(jsonString);
-          setMistakes(parsedData); // Сохраняем реальный массив в стейт
+          setMistakes(parsedData); 
         }
       } catch (e) {
         console.error("Ошибка чтения:", e);
       } finally {
-        setIsLoading(false); // Загрузка завершена
+        setIsLoading(false);
       }
     };
     loadMistakes();
-  }, []); // Пустой массив [] означает "выполнить только 1 раз при открытии"
+  }, []); 
 
   if (isLoading) {
     return (
@@ -81,26 +81,23 @@ export default function MistakesScreen() {
     getReviewAnswer: (q: any) => any;
     viewedIndex: number;
   }) {
-    // false = показываем ошибку пользователя, true = показываем правильный ответ
     const [showCorrect, setShowCorrect] = useState(false);
 
-    // Решаем, какой ответ передать в карточку
     const answerToShow = showCorrect
-      ? getReviewAnswer(mistakeItem.question) // Правильный ответ
-      : mistakeItem.userAnswer; // Ответ пользователя (может быть null)
+      ? getReviewAnswer(mistakeItem.question)
+      : mistakeItem.userAnswer; 
 
     return (
       <View style={styles.question}>
         <View style={styles.questionTextWrapper}>
           <View style={styles.questionIndicator}>
             <PushButton
-              // Меняем картинку и действие в зависимости от состояния
               image={
                 showCorrect
                   ? require("../media/rightAnswer.png")
                   : require("../media/wrongAnswer.png")
               }
-              onPush={() => setShowCorrect(!showCorrect)} // Переключаем состояние при нажатии!
+              onPush={() => setShowCorrect(!showCorrect)} 
               unStyled={true}
             />
           </View>

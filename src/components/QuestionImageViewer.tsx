@@ -39,7 +39,6 @@ export default function QuestionImageViewer({ uri }: QuestionImageViewerProps) {
         </TouchableOpacity>
       </View>
 
-      {/* Полноэкранный модальный просмотр */}
       <Modal
         visible={showFullImage}
         transparent={true}

@@ -10,15 +10,14 @@ export default function SplashScreen({ isReady }: SplashScreenProps) {
   const [isVisible, setIsVisible] = useState(true);
   const fadeAnim = useState(new Animated.Value(1))[0];
 
-  // Простая и плавная анимация моргания
+ 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
 
     const blink = () => {
-      // Ждём 3-6 секунд между морганиями
+  
       timeoutId = setTimeout(
         () => {
-          // Быстрое моргание: open -> half -> full -> half -> open
           setCurrentImage(1); // half (60ms)
 
           setTimeout(() => {
@@ -46,7 +45,6 @@ export default function SplashScreen({ isReady }: SplashScreenProps) {
   // Плавное исчезновение
   useEffect(() => {
     if (isReady) {
-      // Увеличили время до 3000 мс (3 секунды), чтобы точно успеть заметить моргание
       const timer = setTimeout(() => {
         setIsVisible(false);
       }, 3000);
@@ -75,7 +73,6 @@ export default function SplashScreen({ isReady }: SplashScreenProps) {
         resizeMode="contain"
       />
 
-      {/* ИЗМЕНЕНИЕ: Рендерим все 3 состояния, но показываем только активное через opacity */}
       <Image
         source={require("../media/KiraOpenEyes.png")}
         style={[styles.kira, { opacity: currentImage === 0 ? 1 : 0 }]}

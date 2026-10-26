@@ -9,7 +9,7 @@
     } from "react-native";
     import { SingleAnswerQuestion } from "../types/question";
     import PushButton from "./PushButton";
-    import QuestionImageViewer from "./QuestionImageViewer"; // ✅ Импортируем новый компонент
+    import QuestionImageViewer from "./QuestionImageViewer";
 
     type SingleQuestionProps = {
     question: SingleAnswerQuestion;
@@ -127,7 +127,7 @@
         fontFamily: "ActayWide-Bold",
         color: "white",
         fontSize: 14,
-        marginBottom: 10, // Небольшой отступ до картинки или вариантов
+        marginBottom: 10, 
     },
     selectedOption: {
         marginVertical: 5,

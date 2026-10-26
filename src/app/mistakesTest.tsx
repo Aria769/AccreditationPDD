@@ -36,10 +36,9 @@ export default function MistakesTestScreen() {
   useEffect(() => {
     const loadMistakes = async () => {
       try {
-        const storedMistakes = await AsyncStorage.getItem("allMistakes"); // Читаем allMistakes
+        const storedMistakes = await AsyncStorage.getItem("allMistakes");
         if (storedMistakes) {
           const parsedMistakes = JSON.parse(storedMistakes);
-          // Перемешиваем ошибки, чтобы порядок не был предсказуемым
           setMistakesList(shuffleArray(parsedMistakes));
         } else {
           setMistakesList([]);
@@ -118,10 +117,29 @@ export default function MistakesTestScreen() {
             isCorrect = true;
           break;
         case "matching-question":
-        case "sequence-question":
+          // Преобразуем индексы в значения перед сравнением
+          const userMatchingValues = userAnswer.map(
+            (idx: number) => question.optionsRight[idx],
+          );
+          const correctMatchingValues = question.correctAnswer.map(
+            (idx: number) => question.optionsRight[idx],
+          );
           if (
-            JSON.stringify(userAnswer) ===
-            JSON.stringify(question.correctAnswer)
+            JSON.stringify(userMatchingValues) ===
+            JSON.stringify(correctMatchingValues)
+          )
+            isCorrect = true;
+          break;
+        case "sequence-question":
+          const userSequenceValues = userAnswer.map(
+            (idx: number) => question.lines[idx],
+          );
+          const correctSequenceValues = question.correctAnswer.map(
+            (idx: number) => question.lines[idx],
+          );
+          if (
+            JSON.stringify(userSequenceValues) ===
+            JSON.stringify(correctSequenceValues)
           )
             isCorrect = true;
           break;
@@ -220,7 +238,6 @@ export default function MistakesTestScreen() {
 
         <View style={styles.answerArea}>
           <QuestionCard
-            // Важно: берем именно объект question из нашей структуры {question: ..., userAnswer: ...}
             question={mistakesList[questionIndex].question}
             onConfirm={handleAnswer}
             withButton={true}

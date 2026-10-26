@@ -17,7 +17,6 @@ export const showAlert = (
   buttons?: AlertButton[]
 ) => {
   if (showAlertCallback) {
-    // ✅ Используем наш красивый кастомный алерт на ВСЕХ платформах
     showAlertCallback(title, message, buttons);
   } else {
     // Фоллбэк на случай, если алерт вызван до монтирования Layout (очень редко)

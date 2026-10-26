@@ -6,7 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  BackHandler, // ✅ Добавляем для обработки кнопки "Назад" на Android
+  BackHandler, // для обработки кнопки "Назад" на Android
 } from "react-native";
 
 type AlertButton = {
@@ -32,7 +32,7 @@ export default function CustomAlert({
 }: CustomAlertProps) {
   const [isClosing, setIsClosing] = useState(false);
 
-  // ✅ Обработка кнопки "Назад" на Android
+  // Обработка кнопки "Назад" на Android
   useEffect(() => {
     if (visible) {
       const onBackPress = () => {
@@ -63,8 +63,6 @@ export default function CustomAlert({
     }, 10);
   };
 
-  // ✅ УБРАЛИ: if (Platform.OS !== "web") return null;
-  // Теперь компонент рендерится везде
 
   const buttonsToShow =
     buttons.length > 0 ? buttons : [{ text: "OK", style: "default" as const }];
@@ -74,7 +72,7 @@ export default function CustomAlert({
       transparent
       visible={visible}
       animationType="fade"
-      onRequestClose={onHide} // ✅ Работает и на Android, и на iOS (свайп вниз)
+      onRequestClose={onHide} 
     >
       <View style={styles.overlay}>
         <View style={[styles.alertBox, isClosing && styles.closing]}>
@@ -118,17 +116,17 @@ export default function CustomAlert({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.6)", // ✅ Чуть темнее фон для лучшей читаемости на мобильных
+    backgroundColor: "rgba(0, 0, 0, 0.6)", //
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
   },
   alertBox: {
     backgroundColor: "#1D1C23",
-    borderRadius: 16, // ✅ Чуть больше скругление для iOS
+    borderRadius: 16, 
     padding: 24,
     width: "100%",
-    maxWidth: 340, // ✅ Оптимальная ширина для мобильных экранов
+    maxWidth: 340,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -156,8 +154,8 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: "row",
-    justifyContent: "center", // ✅ Центрируем кнопки
-    gap: 12, // ✅ Используем gap вместо margin для чистоты кода
+    justifyContent: "center", 
+    gap: 12, 
   },
   button: {
     flex: 1,
